@@ -28,7 +28,9 @@ app.get('/healthcheck', (req, res) => {
 
 app.post('/ecards', (req, res) => {
 //	checkCardDetails()
-	newCardToDB(req.body)
+	checkCardNumber(req.body.cardNumber)
+		.then(count => count == 0 ? newCardToDB(req.body) : res.status(500).send('Card number already in use'))
+		.then(card_id => newContactInfo(card_id, req.body))
 		.then(data => res.status(200).send())
 		.catch(err => res.status(500).json(err));
 });
@@ -52,17 +54,18 @@ app.put('/ecards/:cardNumber', (req, res) => {
 	//block a card
 });
 
+conn.query('select * from bankcards', (err,data)=> console.log(data));
 
-
-function getDataByCardNumber(cardNumber){
+function checkCardNumber(cardNumber){
 	return new Promise((resolve, reject) => {
 		conn.query(
-		'SELECT COUNT(*)',
-		(err, data) => {
+		'SELECT COUNT(*) FROM bankcards WHERE card_num=?',
+		[cardNumber],
+		(err, count) => {
 		if (err)
 			reject(err);
-		else if (data.length == 1)
-			resolve();
+		else
+			resolve(count[0]);
 		});
 	});
 };
@@ -88,17 +91,29 @@ function newCardToDB(cardDetails){
 		let hash = sha512(`${cardDetails.cardNumber}${cardDetails.validThru}${cardDetails.CVV}`);
 
 		conn.query(
-			`INSERT INTO bankcards 
-			(card_type, card_num, card_valid, card_owner, card_hash) 
-			VALUES (?,?,?,?,?);`,
-			[cardDetails.cardType, cardDetails.cardNumber, cardDeatails.validThru, cardDetails.owner, hash ],
+			'INSERT INTO bankcards (card_type, card_num, card_valid, card_owner, card_hash) VALUES ( ?, ?, ?, ?, ?);',
+			[cardDetails.cardType, cardDetails.cardNumber, cardDetails.validThru, cardDetails.owner, hash ],
 			(err, data) => {
-			if (err)
-				reject(err);
-			else {
-				console.log(data);
-				resolve();
-			}
-		});
+				if (err){
+					reject(err);
+				}
+				else {
+					resolve(data.insertId);
+				}
+			});
 	});
 };
+
+function newContactInfo(card_id, contactDetails){
+	return new Promise((resolve, reject) => {
+		conn.query(
+			'INSERT INTO contact (card_id, contact_type, contact_data) VALUES ( ?, ?, ?);',
+			[card_id, contactDetails.contactType, contactDetails.contactInfo],
+			(err) => {
+				if (err)
+					reject(err);
+				else
+					resolve();
+			});
+	});
+}
