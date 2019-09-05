@@ -48,6 +48,10 @@ app.post('/ecards/validate', (req, res) => {
 	//check if cardType is correct
 	//check hash
 	//send back VALID/INVALID
+	getCardDetails(req.body.cardNumber)
+		.then(data => validate(data, req.body))
+		.then(data => res.status(200).json({'result': data}))
+		.catch(err => res.status(500).json(err))
 });
 
 app.put('/ecards/:cardNumber', (req, res) => {
@@ -170,6 +174,35 @@ function blockCard(cardNumber){
 					reject(err);
 				else
 					resolve();
+			}
+		)
+	});
+}
+
+function validate(data, request){
+	return new Promise((resolve, reject) => {
+		console.log(data);
+		if (!data.card_blocked){
+			if (data.card_type == request.cardType){
+				if (data.card_hash == sha512(`${request.cardNumber}${request.validThru}${request.CVV}`)){
+					resolve('VALID')
+				}
+			}
+		}
+		resolve('INVALID')
+	});
+}
+
+function getCardDetails(cardNumber){
+	return new Promise((resolve, reject) => {
+		conn.query(
+			'SELECT card_blocked, card_type, card_hash FROM bankcards WHERE card_num = ?;',
+			[ cardNumber ],
+			(err, data) => {
+				if (err)
+					reject(err);
+				else
+					resolve(data[0]);
 			}
 		)
 	});
