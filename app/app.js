@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express');
 const app = express();
-const PORT = 8080;
+const PORT = 3000;
 const mysql = require('mysql');
 const sha512 = require('js-sha512');
 const cors = require('cors');
@@ -51,7 +51,9 @@ app.post('/ecards/validate', (req, res) => {
 });
 
 app.put('/ecards/:cardNumber', (req, res) => {
-	//block a card
+	blockCard(req.params.cardNumber)
+		.then(data => res.status(200).send())
+		.catch(err => res.status(404).send())
 });
 
 
@@ -97,17 +99,14 @@ function newCardToDb(cardDetails){
 			(err, data) => {
 				if (err)
 					reject(err);
-				else {
-					console.log(data.insertId + 'insert id end of first q');
+				else 
 					resolve(data.insertId);
-				}
 			});
 	});
 };
 
 function newContactInfo(cardId, contactDetails){
 	return new Promise((resolve, reject) => {
-		console.log(cardId + 'fanky');
 		for (let i = 0 ; i < contactDetails.contactType.length ; i++){
 			conn.query(
 				'INSERT INTO contact (card_id, contact_type, contact_data) VALUES ( ?, ?, ?);',
@@ -154,10 +153,24 @@ function getDataByCardNumber(cardNumber){
 										owner : `${cardDetails[0].card_owner}`,
 										contactinfo : contactInfo
 									})
-							
 								);
 							}
 						});
 		});
+	});
+}
+
+function blockCard(cardNumber){
+	return new Promise((resolve, reject) => {
+		conn.query(
+			'UPDATE bankcards SET card_blocked = true WHERE card_num = ? ;',
+			[cardNumber],
+			(err) => {
+				if (err)
+					reject(err);
+				else
+					resolve();
+			}
+		)
 	});
 }
