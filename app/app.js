@@ -27,7 +27,8 @@ app.get('/healthcheck', (req, res) => {
 });
 
 app.post('/ecards', (req, res) => {
-	newCardToDB(req.body)
+	checkCardDetails()
+		.then(data => newCardToDB(req.body))
 		.then(data => res.status(200).send())
 		.catch(err => res.status(500).json(err));
 });
@@ -66,11 +67,26 @@ function getDataByCardNumber(cardNumber){
 	});
 };
 
+function checkCardDetails(cardDetails){
+	return new Promise((resolve, reject) => {
+		if ( cardDetails.cardNumber.length == 16 ){
+			if ( validThru == /\d{2}\/\d{2}/g ){
+				if ( validThru.split('/')[0] < 13 && validThru.split('/')[1] < 32 ){
+					if ( CVV.length == 2 ){
+						resolve();
+					}
+				}
+			}
+		}
+		reject();
+	});
+}
+
+
 function newCardToDB(cardDetails){
 	return new Promise((resolve, reject) => {
 		let hash = sha512(`${cardDetails.cardNumber}${cardDetails.validThru}${cardDetails.CVV}`);
-		console.log(hash);
-		console.log(cardDetails);
+
 		conn.query(
 			`INSERT INTO bankcards 
 			(card_type, card_num, card_valid, card_owner, card_hash) 
@@ -79,9 +95,10 @@ function newCardToDB(cardDetails){
 			(err, data) => {
 			if (err)
 				reject(err);
-			else
+			else {
 				console.log(data);
 				resolve();
-			});
+			}
+		});
 	});
 };
