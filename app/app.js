@@ -29,7 +29,7 @@ app.get('/healthcheck', (req, res) => {
 app.post('/ecards', (req, res) => {
 //	checkCardDetails()
 	checkCardNumber(req.body.cardNumber)
-		.then(count => count == 0 ? newCardToDB(req.body) : res.status(500).send('Card number already in use'))
+		.then(count => newCardToDb(req.body))
 		.then(card_id => newContactInfo(card_id, req.body))
 		.then(data => res.status(200).send())
 		.catch(err => res.status(500).json(err));
@@ -54,18 +54,19 @@ app.put('/ecards/:cardNumber', (req, res) => {
 	//block a card
 });
 
-conn.query('select * from bankcards', (err,data)=> console.log(data));
 
 function checkCardNumber(cardNumber){
 	return new Promise((resolve, reject) => {
 		conn.query(
-		'SELECT COUNT(*) FROM bankcards WHERE card_num=?',
+		'SELECT COUNT(*) AS x FROM bankcards WHERE card_num=?',
 		[cardNumber],
 		(err, count) => {
 		if (err)
 			reject(err);
+		else if (count[0].x == 1)
+			reject('already in database');
 		else
-			resolve(count[0]);
+			resolve();
 		});
 	});
 };
@@ -86,7 +87,7 @@ function checkCardDetails(cardDetails){
 }
 
 
-function newCardToDB(cardDetails){
+function newCardToDb(cardDetails){
 	return new Promise((resolve, reject) => {
 		let hash = sha512(`${cardDetails.cardNumber}${cardDetails.validThru}${cardDetails.CVV}`);
 
@@ -94,26 +95,28 @@ function newCardToDB(cardDetails){
 			'INSERT INTO bankcards (card_type, card_num, card_valid, card_owner, card_hash) VALUES ( ?, ?, ?, ?, ?);',
 			[cardDetails.cardType, cardDetails.cardNumber, cardDetails.validThru, cardDetails.owner, hash ],
 			(err, data) => {
-				if (err){
+				if (err)
 					reject(err);
-				}
 				else {
+					console.log(data.insertId + 'insert id end of first q');
 					resolve(data.insertId);
 				}
 			});
 	});
 };
 
-function newContactInfo(card_id, contactDetails){
+function newContactInfo(cardId, contactDetails){
 	return new Promise((resolve, reject) => {
-		conn.query(
-			'INSERT INTO contact (card_id, contact_type, contact_data) VALUES ( ?, ?, ?);',
-			[card_id, contactDetails.contactType, contactDetails.contactInfo],
-			(err) => {
-				if (err)
-					reject(err);
-				else
-					resolve();
-			});
+		console.log(cardId + 'fanky');
+		for (let i = 0 ; i < contactDetails.contactType.length ; i++){
+			conn.query(
+				'INSERT INTO contact (card_id, contact_type, contact_data) VALUES ( ?, ?, ?);',
+				[cardId, contactDetails.contactType[i], contactDetails.contactInfo[i]],
+				(err) => {
+					if (err)
+						reject(err);
+				}
+			)}
+		resolve();
 	});
 }
