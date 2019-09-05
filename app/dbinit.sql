@@ -6,7 +6,7 @@ CREATE TABLE bankcards (
 	card_id INT NOT NULL AUTO_INCREMENT,
 	card_type ENUM('Mastercard Standard', 'Maestro', 'Mastercard Gold', 'Mastercard World Gold', 'Mastercard Standard Devisa', 'Maestro Student', 'Visa Classic', 'Visa Virtual', 'Visa Electron' ) NOT NULL,
 	card_num BIGINT NOT NULL UNIQUE,
-	card_valid VARCHAR(5) NOT NULL,
+	card_validThru VARCHAR(5) NOT NULL,
 	card_owner VARCHAR(40) NOT NULL,
 	card_hash VARCHAR(150) NOT NULL,
 	card_blocked BOOLEAN NOT NULL DEFAULT false,
