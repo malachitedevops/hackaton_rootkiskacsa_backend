@@ -92,7 +92,7 @@ function newCard(cardDetails){
 		let hash = sha512(`${cardDetails.cardNumber}${cardDetails.validThru}${cardDetails.CVV}`);
 
 		conn.query(
-			'INSERT INTO bankcards (card_type, card_num, card_valid, card_owner, card_hash) VALUES ( ?, ?, ?, ?, ?);',
+			'INSERT INTO bankcards (card_type, card_num, card_validThru, card_owner, card_hash) VALUES ( ?, ?, ?, ?, ?);',
 			[cardDetails.cardType, cardDetails.cardNumber, cardDetails.validThru, cardDetails.owner, hash ],
 			(err, data) => {
 				if (err)
@@ -121,7 +121,7 @@ function newContactInfo(cardId, contactDetails){
 function getDataByCardNumber(cardNumber){
 	return new Promise((resolve, reject) => {
 		conn.query(
-			'SELECT card_id, card_type, card_num, card_valid, card_blocked, card_owner FROM bankcards WHERE card_num = ? ;',
+			'SELECT card_id, card_type, card_num, card_validThru, card_blocked, card_owner FROM bankcards WHERE card_num = ? ;',
 			[ cardNumber ],
 			(err, cardDetails) => {
 				if (err)
@@ -148,7 +148,7 @@ function getDataByCardNumber(cardNumber){
 										{ 
 										cardType : `${cardDetails[0].card_type}`,
 										cardNumber : `${cardDetails[0].card_num}`,
-										validThru : `${cardDetails[0].card_valid}`,
+										validThru : `${cardDetails[0].card_validThru}`,
 										disabled : cardDetails[0].card_blocked == 0 ? 'no' : 'yes' ,
 										owner : `${cardDetails[0].card_owner}`,
 										contactinfo : contactInfo
