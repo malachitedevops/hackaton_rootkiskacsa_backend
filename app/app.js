@@ -27,8 +27,8 @@ app.get('/healthcheck', (req, res) => {
 });
 
 app.post('/ecards', (req, res) => {
-	checkCardDetails()
-		.then(data => newCardToDB(req.body))
+//	checkCardDetails()
+	newCardToDB(req.body)
 		.then(data => res.status(200).send())
 		.catch(err => res.status(500).json(err));
 });
@@ -72,7 +72,7 @@ function checkCardDetails(cardDetails){
 		if ( cardDetails.cardNumber.length == 16 ){
 			if ( validThru == /\d{2}\/\d{2}/g ){
 				if ( validThru.split('/')[0] < 13 && validThru.split('/')[1] < 32 ){
-					if ( CVV.length == 2 ){
+					if ( CVV.length == 3 ){
 						resolve();
 					}
 				}
