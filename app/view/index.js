@@ -2,9 +2,8 @@
 
 const button = document.querySelector("button");
 button.addEventListener('click', (event) => {
-  const selectvalue = document.querySelector("select").value
-  const p = document.querySelector("p");
   event.preventDefault();
+  console.log('ok');
   fetch(`http://localhost:8080/ecards`, {
     method: 'POST',
     headers: {
@@ -20,14 +19,4 @@ button.addEventListener('click', (event) => {
       contactType: document.querySelectorAll("input")[6].value,
     }),
   })
-    .then(response => response.json())
-    .then(data => {
-      p.innerHTML = data.message;
-      if (data.message == "Successful!") {
-        document.querySelector("form").reset();
-        document.querySelector("ul").innerHTML = "";
-        loadData();
-      }
-    });
-
 })
