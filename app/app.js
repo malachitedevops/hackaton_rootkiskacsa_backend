@@ -3,16 +3,17 @@ const express = require('express');
 const app = express();
 const PORT = 8080;
 const mysql = require('mysql');
-const sha512 = require('sha512');
+const sha512 = require('js-sha512');
+const cors = require('cors');
 require('dotenv').config();
 app.use(express.static('view'));
 app.use(express.json());
 
 const conn = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USERNAME,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'erste'
 });
 
 app.listen(PORT, () => console.log('Server is listening on port: ' + PORT));
@@ -26,7 +27,7 @@ app.get('/healthcheck', (req, res) => {
 });
 
 app.post('/ecards', (req, res) => {
-	newCardToDB()
+	newCardToDB(req.body)
 		.then(data => res.status(200).send())
 		.catch(err => res.status(500).json(err));
 });
@@ -68,7 +69,8 @@ function getDataByCardNumber(cardNumber){
 function newCardToDB(cardDetails){
 	return new Promise((resolve, reject) => {
 		let hash = sha512(`${cardDetails.cardNumber}${cardDetails.validThru}${cardDetails.CVV}`);
-
+		console.log(hash);
+		console.log(cardDetails);
 		conn.query(
 			`INSERT INTO TABLE bankcards 
 			(card_type, card_num, card_valid, card_owner, card_hash) 

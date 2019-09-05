@@ -14,5 +14,8 @@
     "express": "^4.17.1",
     "js-sha512": "^0.8.0",
     "mysql": "^2.17.1"
+  },
+  "devDependencies": {
+    "cors": "^2.8.5"
   }
 }
