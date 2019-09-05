@@ -10,10 +10,10 @@ app.use(express.static('view'));
 app.use(express.json());
 
 const conn = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'erste'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
 });
 
 app.listen(PORT, () => console.log('Server is listening on port: ' + PORT));
