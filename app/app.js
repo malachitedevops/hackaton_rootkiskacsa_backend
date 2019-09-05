@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const PORT = 8080;
 const mysql = require('mysql');
+const sha512 = require('sha512');
 require('dotenv').config();
 app.use(express.static('view'));
 app.use(express.json());
@@ -25,15 +26,13 @@ app.get('/healthcheck', (req, res) => {
 });
 
 app.post('/ecards', (req, res) => {
-	console.log(req.body); 
-	//check if card exists
-	//yes => status 500
-	//no => addCard , status 200
-	res.status(200).send();
+	newCardToDB()
+		.then(data => res.status(200).send())
+		.catch(err => res.status(500).json(err));
 });
 
 app.get('/ecards/:cardNumber', (req, res) => {
-	getDataByCardNumber()
+	getDataByCardNumber(cardNumber)
 		.then(data => res.status(200).json(data))
 		.catch(err => res.status(500).json(err));
 });
@@ -53,4 +52,34 @@ app.put('/ecards/:cardNumber', (req, res) => {
 
 
 
-function getDataByCardNumber(){};
+function getDataByCardNumber(cardNumber){
+	return new Promise((resolve, reject) => {
+		conn.query(
+		'SELECT COUNT(*)',
+		(err, data) => {
+		if (err)
+			reject(err);
+		else if (data.length == 1)
+			resolve();
+		});
+	});
+};
+
+function newCardToDB(cardDetails){
+	return new Promise((resolve, reject) => {
+		let hash = sha512(`${cardDetails.cardNumber}${cardDetails.validThru}${cardDetails.CVV}`);
+
+		conn.query(
+			`INSERT INTO TABLE bankcards 
+			(card_type, card_num, card_valid, card_owner, card_hash) 
+			VALUES (?,?,?,?);`,
+			[cardDetails.cardType, cardDetails.cardNumber, cardDeatails.validThru, cardDetails.owner, hash ],
+			(err, data) => {
+			if (err)
+				reject(err);
+			else
+				console.log(data);
+				resolve();
+			});
+	});
+};
