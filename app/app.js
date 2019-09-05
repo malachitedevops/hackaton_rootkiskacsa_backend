@@ -36,9 +36,9 @@ app.post('/ecards', (req, res) => {
 });
 
 app.get('/ecards/:cardNumber', (req, res) => {
-	getDataByCardNumber(cardNumber)
+	getDataByCardNumber(req.params.cardNumber)
 		.then(data => res.status(200).json(data))
-		.catch(err => res.status(500).json(err));
+		.catch(err => res.status(404).json(err));
 });
 
 app.post('/ecards/validate', (req, res) => {
@@ -118,5 +118,46 @@ function newContactInfo(cardId, contactDetails){
 				}
 			)}
 		resolve();
+	});
+}
+
+function getDataByCardNumber(cardNumber){
+	return new Promise((resolve, reject) => {
+		conn.query(
+			'SELECT card_id, card_type, card_num, card_valid, card_blocked, card_owner FROM bankcards WHERE card_num=?;',
+			[ cardNumber ],
+			(err, cardDetails) => {
+				if (err)
+					reject(err);
+				else
+					conn.query(
+						'SELECT contact_type, contact_data FROM contact WHERE card_id=?;',
+						[ cardDetails[0].card_id ],
+						(err, contactDetails) => {
+							if (err)
+								reject(err);
+							else {
+								let contactInfo = new Array();
+								contactDetails.forEach(row => {
+									let contactRecord = new Object();
+									contactRecord["contact_type"] = row.contact_type;
+									contactRecord["contact_data"] = row.contact_data;
+									contactInfo.push(contactRecord);
+								})
+
+								resolve(
+									new Object({ 
+										cardType : `${cardDetails[0].card_type}`,
+										cardNumber : `${cardDetails[0].card_num}`,
+										validThru : `${cardDetails[0].card_valid}`,
+										disabled : cardDetails[0].card_blocked == 0 ? 'no' : 'yes' ,
+										owner : `${cardDetails[0].card_owner}`,
+										contactinfo : contactInfo
+									})
+							
+								);
+							}
+						});
+		});
 	});
 }
