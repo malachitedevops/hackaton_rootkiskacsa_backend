@@ -4,7 +4,7 @@ const button = document.querySelector("button");
 button.addEventListener('click', (event) => {
   event.preventDefault();
   console.log('ok');
-  fetch(`http://localhost:8080/ecards`, {
+  fetch(`http://localhost:3000/ecards`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
