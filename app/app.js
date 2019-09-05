@@ -72,9 +72,9 @@ function newCardToDB(cardDetails){
 		console.log(hash);
 		console.log(cardDetails);
 		conn.query(
-			`INSERT INTO TABLE bankcards 
+			`INSERT INTO bankcards 
 			(card_type, card_num, card_valid, card_owner, card_hash) 
-			VALUES (?,?,?,?);`,
+			VALUES (?,?,?,?,?);`,
 			[cardDetails.cardType, cardDetails.cardNumber, cardDeatails.validThru, cardDetails.owner, hash ],
 			(err, data) => {
 			if (err)
