@@ -26,6 +26,7 @@ nav {
 	justify-content: space-between;
 }
 
+select,
 input {
 	background-color: lightgrey;
 	border-radius: 10px;
