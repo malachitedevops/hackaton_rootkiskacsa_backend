@@ -45,7 +45,7 @@ pipeline {
 
 		stage ('Dockerize Application') {
 			when {
-				branch 'master
+				branch 'master'
 			}
 			steps {
 				sshagent(credentials: ['rootkiskacsa_ssh']) {
