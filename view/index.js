@@ -40,7 +40,7 @@ blockCard.addEventListener('click', (event) =>{
 
 checkValidity.addEventListener('click', (event)=>{
   event.preventDefault();
-  h2.innerHTML = "Check Validity"
+  h2.innerHTML = "Check Validityc"
   let div = document.querySelector("div");
   div.innerHTML=`Card Type: <input type="text" name="cardType"><br>
   Card Number: <input type="text" name="cardNumber"><br>
@@ -54,7 +54,7 @@ button.addEventListener('click', (event) => send())
 const send = function() {
   if(h2.innerHTML==='Add Card'){
     event.preventDefault();
-    fetch('http://localhost:3000/ecards', {
+    fetch('http://3.87.38.201:3000/ecards', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -76,7 +76,7 @@ const send = function() {
 			.then(data => console.log(data))
   }else if(h2.innerHTML==="Query"){
     event.preventDefault();
-    fetch(`http://localhost:3000/ecards/${document.querySelectorAll('input')[0].value}`, {
+    fetch(`http://3.87.38.201:3000/ecards/${document.querySelectorAll('input')[0].value}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ const send = function() {
 			.then(data => console.log(data))
   }else if(h2.innerHTML='Check Validity'){
     event.preventDefault();
-    fetch('http://localhost:3000/validate', {
+    fetch('http://3.87.38.201:3000/validate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -101,8 +101,7 @@ const send = function() {
     })
   }else if(h2.innerHTML==='Block Card'){
     event.preventDefault();
-		console.log(querySelectorAll('input'))
-    fetch(`http://localhost:3000/ecards/${document.querySelectorAll("input")[2].value}`, {
+    fetch(`http://3.87.38.201:3000/ecards/${document.querySelectorAll("input")[2].value}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
