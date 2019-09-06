@@ -13,7 +13,7 @@ const conn = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASS,
-  database: DB_NAME
+  database: process.env.DB_NAME
 });
 
 app.listen(PORT, () => console.log('Server is listening on port: ' + PORT));
@@ -217,10 +217,11 @@ function checkAuthority(username, password){
 		(err) => {
 			if (err, data)
 				reject(err);
-			else if ( data[0].user_hash == sha512(`${username}${password}`){
+			else if ( data[0].user_hash == sha512(`${username}${password}`)){
 				resolve()
 			} else {
 				reject('Cant access');
+			}
 		});
 	});
 }
