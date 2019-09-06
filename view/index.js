@@ -40,7 +40,7 @@ blockCard.addEventListener('click', (event) =>{
 
 checkValidity.addEventListener('click', (event)=>{
   event.preventDefault();
-  h2.innerHTML = "Check Validityc"
+  h2.innerHTML = "Check Validity"
   let div = document.querySelector("div");
   div.innerHTML=`Card Type: <input type="text" name="cardType"><br>
   Card Number: <input type="text" name="cardNumber"><br>
@@ -84,6 +84,19 @@ const send = function() {
       mode: "same-origin",
     })
 			.then(data => console.log(data))
+  }else if(h2.innerHTML==='Block Card'){
+    event.preventDefault();
+    fetch(`http://3.87.38.201:3000/ecards/${document.querySelectorAll("input")[2].value}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      mode: "same-origin",
+      body: JSON.stringify({
+        "username": document.querySelectorAll("input")[0].value,
+        "password": document.querySelectorAll("input")[1].value,
+      }),
+    })
   }else if(h2.innerHTML='Check Validity'){
     event.preventDefault();
     fetch('http://3.87.38.201:3000/validate', {
@@ -99,19 +112,5 @@ const send = function() {
         "CVV": document.querySelectorAll("input")[3].value,
       }),
     })
-  }else if(h2.innerHTML==='Block Card'){
-    event.preventDefault();
-    fetch(`http://3.87.38.201:3000/ecards/${document.querySelectorAll("input")[2].value}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      mode: "same-origin",
-      body: JSON.stringify({
-        "username": document.querySelectorAll("input")[0].value,
-        "password": document.querySelectorAll("input")[1].value,
-      }),
-    })
   }
-
  }
