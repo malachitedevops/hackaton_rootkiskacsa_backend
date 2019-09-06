@@ -122,7 +122,7 @@ const send = function() {
     .then(data => console.log(data))
   }else if(h2.innerHTML='Check Validity'){
     event.preventDefault();
-    fetch('http://3.87.38.201:3000/validate', {
+    fetch('http://3.87.38.201:3000/ecards/validate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -135,6 +135,7 @@ const send = function() {
         "CVV": document.querySelectorAll(".choice")[3].value,
       }),
     })
-    .then(data => console.log(data))
+    .then(data => json(data))
+    .then(myJson => console.log(myJson))
   }
  }
