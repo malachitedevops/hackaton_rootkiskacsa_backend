@@ -43,7 +43,6 @@ app.post('/ecards', (req, res) => {
 app.get('/ecards/:cardNumber', (req, res) => {
 	getDataByCardNumber(req.params.cardNumber)
 		.then(data => {
-			console.log(data)
 			res.status(200).json(data);
 		})
 		.catch(err => res.status(404).json(err));
@@ -61,8 +60,8 @@ app.put('/ecards/:cardNumber', (req, res) => {
 		.then(data => {
 			blockCard(req.params.cardNumber)
 		})
-		.then(data => res.status(200).send())
-		.catch(err => res.status(404).send())
+		.then(data => res.status(200).json('The card has been blocked'))
+		.catch(err => res.status(404).json('The card has not been blocked'))
 });
 
 

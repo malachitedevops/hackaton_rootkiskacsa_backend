@@ -103,7 +103,8 @@ const send = function() {
       },
       mode: "same-origin",
     })
-			.then(data => console.log(data))
+    .then(response => response.json())
+    .then(data => console.log(data))
   }else if(h2.innerHTML==='Block Card'){
     event.preventDefault();
     fetch(`http://3.87.38.201:3000/ecards/${document.querySelectorAll(".choice")[2].value}`, {
@@ -117,6 +118,8 @@ const send = function() {
         "password": document.querySelectorAll(".choice")[1].value,
       }),
     })
+    .then(response => response.json())
+    .then(data => console.log(data))
   }else if(h2.innerHTML='Check Validity'){
     event.preventDefault();
     fetch('http://3.87.38.201:3000/validate', {
@@ -132,5 +135,7 @@ const send = function() {
         "CVV": document.querySelectorAll(".choice")[3].value,
       }),
     })
+    .then(response => response.json())
+    .then(data => console.log(data))
   }
  }
