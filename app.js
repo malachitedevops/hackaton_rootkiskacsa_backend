@@ -38,7 +38,10 @@ app.post('/ecards', (req, res) => {
 
 app.get('/ecards/:cardNumber', (req, res) => {
 	getDataByCardNumber(req.params.cardNumber)
-		.then(data => res.status(200).json(data))
+		.then(data => {
+			console.log(data)
+			res.status(200).json(data);
+		})
 		.catch(err => res.status(404).json(err));
 });
 
@@ -51,7 +54,9 @@ app.post('/ecards/validate', (req, res) => {
 
 app.put('/ecards/:cardNumber', (req, res) => {
 	checkAuthority(req.body.username, req.body.password)
-		.then(data => blockCard(req.params.cardNumber))
+		.then(data => {
+			blockCard(req.params.cardNumber)
+		})
 		.then(data => res.status(200).send())
 		.catch(err => res.status(404).send())
 });
@@ -171,7 +176,7 @@ function blockCard(cardNumber){
 		conn.query(
 			'UPDATE bankcards SET card_blocked = true WHERE card_num = ? ;',
 			[ cardNumber ],
-			(err) => {
+			(err, data) => {
 				if (err)
 					reject(err);
 				else
@@ -214,8 +219,8 @@ function checkAuthority(username, password){
 		conn.query(
 		'SELECT username, user_hash FROM tokens WHERE username = ? ;',
 		[ username ],
-		(err) => {
-			if (err, data)
+		(err, data) => {
+			if (err)
 				reject(err);
 			else if ( data[0].user_hash == sha512(`${username}${password}`)){
 				resolve()
