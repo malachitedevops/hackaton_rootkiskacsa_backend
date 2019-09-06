@@ -31,20 +31,14 @@ app.post('/ecards', (req, res) => {
 		.then(data => checkCardNumber(req.body.cardNumber))
 		.then(count => newCard(req.body))
 		.then(card_id => newContactInfo(card_id, req.body))
-		.then(data => {
-			getDataByCardNumber(req.body.cardNumber)
-				.then(response => {
-					res.status(200).json(response)
-				})
-		})
+		.then(data => getDataByCardNumber(req.body.cardNumber))
+		.then(response => res.status(200).json(response))
 		.catch(err => res.status(500).json(err));
 });
 
 app.get('/ecards/:cardNumber', (req, res) => {
 	getDataByCardNumber(req.params.cardNumber)
-		.then(data => {
-			res.status(200).json(data);
-		})
+		.then(data => res.status(200).json(data))
 		.catch(err => res.status(404).json(err));
 });
 
@@ -57,9 +51,7 @@ app.post('/ecards/validate', (req, res) => {
 
 app.put('/ecards/:cardNumber', (req, res) => {
 	checkAuthority(req.body.username, req.body.password)
-		.then(data => {
-			blockCard(req.params.cardNumber)
-		})
+		.then(data => blockCard(req.params.cardNumber))
 		.then(data => res.status(200).json('The card has been blocked'))
 		.catch(err => res.status(404).json('The card has not been blocked'))
 });
