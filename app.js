@@ -51,10 +51,7 @@ app.get('/ecards/:cardNumber', (req, res) => {
 app.post('/ecards/validate', (req, res) => {
 	getCardDetails(req.body.cardNumber)
 		.then(data => validate(data, req.body))
-		.then(decision => {
-			console.log(decision)
-			res.status(200).json(decision)
-		})
+		.then(decision => res.status(200).json(decision))
 		.catch(err => res.status(500).json(err))
 });
 
@@ -83,22 +80,6 @@ function checkCardNumber(cardNumber){
 		});
 	});
 };
-
-function checkCardDetails(cardDetails){
-	return new Promise((resolve, reject) => {
-		if ( cardDetails.cardNumber.length == 16 ){
-			if ( validThru == /\d{2}\/\d{2}/g ){
-				if ( validThru.split('/')[0] < 13 && validThru.split('/')[1] < 32 ){
-					if ( CVV.length == 3 ){
-						resolve();
-					}
-				}
-			}
-		}
-		reject();
-	});
-}
-
 
 function newCard(cardDetails){
 	return new Promise((resolve, reject) => {
