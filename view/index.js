@@ -122,15 +122,15 @@ const send = function() {
     .then(data => console.log(data))
   }else if(h2.innerHTML='Check Validity'){
     event.preventDefault();
-    fetch('http://3.87.38.201:3000/validate', {
+    fetch('http://3.87.38.201:3000/ecards/validate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       mode: "same-origin",
       body: JSON.stringify({
-        "cardNumber": document.querySelectorAll(".choice")[1].value,
         "cardType": document.querySelectorAll(".choice")[0].value,
+        "cardNumber": document.querySelectorAll(".choice")[1].value,
         "validThru": document.querySelectorAll(".choice")[2].value,
         "CVV": document.querySelectorAll(".choice")[3].value,
       }),
