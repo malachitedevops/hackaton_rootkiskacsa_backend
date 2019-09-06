@@ -28,7 +28,8 @@ app.get('/healthcheck', (req, res) => {
 
 app.post('/ecards', (req, res) => {
 //	checkCardDetails()
-	checkCardNumber(req.body.cardNumber)
+	checkAuthority(req.body.username, req.body.password)
+		.then(data => checkCardNumber(req.body.cardNumber))
 		.then(count => newCard(req.body))
 		.then(card_id => newContactInfo(card_id, req.body))
 		.then(data => res.status(200).send())
@@ -49,7 +50,8 @@ app.post('/ecards/validate', (req, res) => {
 });
 
 app.put('/ecards/:cardNumber', (req, res) => {
-	blockCard(req.params.cardNumber)
+	checkAuthority(req.body.username, req.body.password)
+		.then(data => blockCard(req.params.cardNumber))
 		.then(data => res.status(200).send())
 		.catch(err => res.status(404).send())
 });
@@ -204,5 +206,21 @@ function getCardDetails(cardNumber){
 					resolve(data[0]);
 			}
 		)
+	});
+}
+
+function checkAuthority(username, password){
+	return new Promise((resolve, reject) => {
+		conn.query(
+		'SELECT username, user_hash FROM tokens WHERE username = ? ;',
+		[ username ],
+		(err) => {
+			if (err, data)
+				reject(err);
+			else if ( data[0].user_hash == sha512(`${username}${password}`){
+				resolve()
+			} else {
+				reject('Cant access');
+		});
 	});
 }
