@@ -72,6 +72,8 @@ const send = function() {
         "contactType": document.querySelectorAll("input")[8].value
       }),
     })
+			.then(response => response.json())
+			.then(data => console.log(data))
   }else if(h2.innerHTML==="Query"){
     event.preventDefault();
     fetch(`http://localhost:3000/ecards/${document.querySelectorAll('input')[0].value}`, {
@@ -81,6 +83,7 @@ const send = function() {
       },
       mode: "same-origin",
     })
+			.then(data => console.log(data))
   }else if(h2.innerHTML='Check Validity'){
     event.preventDefault();
     fetch('http://localhost:3000/validate', {
@@ -98,6 +101,7 @@ const send = function() {
     })
   }else if(h2.innerHTML==='Block Card'){
     event.preventDefault();
+		console.log(querySelectorAll('input'))
     fetch(`http://localhost:3000/ecards/${document.querySelectorAll("input")[2].value}`, {
       method: 'PUT',
       headers: {
