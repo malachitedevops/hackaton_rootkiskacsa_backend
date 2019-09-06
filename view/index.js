@@ -135,7 +135,6 @@ const send = function() {
         "CVV": document.querySelectorAll(".choice")[3].value,
       }),
     })
-    .then(response => response.json())
     .then(data => console.log(data))
   }
  }
