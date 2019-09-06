@@ -35,6 +35,10 @@ input {
 	border-color: darkgrey;
 }
 
+select {
+	height: 35px;
+}
+
 button {
 		background: lightgrey;
 		border-radius: 15px;
