@@ -27,7 +27,6 @@ app.get('/healthcheck', (req, res) => {
 });
 
 app.post('/ecards', (req, res) => {
-//	checkCardDetails()
 	checkAuthority(req.body.username, req.body.password)
 		.then(data => checkCardNumber(req.body.cardNumber))
 		.then(count => newCard(req.body))
