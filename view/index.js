@@ -122,7 +122,6 @@ const send = function() {
     .then(data => console.log(data))
   }else if(h2.innerHTML='Check Validity'){
     event.preventDefault();
-    console.log(document.querySelectorAll(".choice")[0].value, document.querySelectorAll(".choice")[1].value, document.querySelectorAll(".choice")[2].value,document.querySelectorAll(".choice")[3].value)
     fetch('http://3.87.38.201:3000/validate', {
       method: 'POST',
       headers: {
@@ -130,8 +129,8 @@ const send = function() {
       },
       mode: "same-origin",
       body: JSON.stringify({
-        "cardType": document.querySelectorAll(".choice")[0].value,
         "cardNumber": document.querySelectorAll(".choice")[1].value,
+        "cardType": document.querySelectorAll(".choice")[0].value,
         "validThru": document.querySelectorAll(".choice")[2].value,
         "CVV": document.querySelectorAll(".choice")[3].value,
       }),
