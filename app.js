@@ -32,7 +32,12 @@ app.post('/ecards', (req, res) => {
 		.then(data => checkCardNumber(req.body.cardNumber))
 		.then(count => newCard(req.body))
 		.then(card_id => newContactInfo(card_id, req.body))
-		.then(data => res.status(200).send())
+		.then(data => {
+			getDataByCardNumber(req.body.cardNumber)
+				.then(response => {
+					res.status(200).json(response)
+				})
+		})
 		.catch(err => res.status(500).json(err));
 });
 
