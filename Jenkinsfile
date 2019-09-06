@@ -19,7 +19,7 @@ pipeline {
 			}
 		}
         
-        stage ('Build Docker Image') {
+    stage ('Build Docker Image') {
 			when {
 				branch 'master'
 			}
@@ -30,7 +30,7 @@ pipeline {
 			}
 		}
         
-        stage ('Push to Dockerhub') {
+    stage ('Push to Dockerhub') {
 			when {
 				branch 'master'
 			}
@@ -42,5 +42,17 @@ pipeline {
 				}
 			}
 		}
-    }
+
+		stage ('Dockerize Application') {
+			when {
+				branch 'master
+			}
+			steps {
+				sshagent(credentials: ['rootkiskacsa_ssh']) {
+					sh 'ssh ubuntu@3.87.38.201 "bash /home/rootkiskacsa/dockerize_erste.sh"'
+				}
+			}
+		}
+
+  }
 }   
