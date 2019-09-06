@@ -18,15 +18,25 @@
   <form>
     <h2>Add Card</h2>
     <div>
-      Username: <input type="text" name="username"><br>
-      Password: <input type="password" name="password"><br>
-      Card Type: <input type="text" name="cardType"><br>
-      CardNumber: <input type="number" name="cardNumber"><br>
-      Valid through: <input type="text" name="validThru"><br>
-      CVV: <input type="password" name="CVV"><br>
-      Owner: <input type="text" name="owner"><br>
-      Contact info: <input type="text" name="contactInfo"><br>
-      Contact type: <input type="text" name="contactType"><br>
+      Username: <input type="text" name="username" class = "choice"><br>
+      Password: <input type="password" name="password" class = "choice"><br>
+      Card Type: <select name="cardType" class = "choice">
+        <option value='Mastercard Standard'>Mastercard Standard</option>
+        <option value='Maestro'>Maestro</option>
+        <option value='Mastercard Gold'>Mastercard Gold</option>
+        <option value='Mastercard World Gold'>Mastercard World Gold</option>
+        <option value="Mastercard Standard Devisa">Mastercard Standard Devisa</option>
+        <option value='Maestro Student'>Maestro Student</option>
+        <option value='Visa Classic'>Visa Classic'</option>
+        <option value='Visa Virtual'>Visa Virtual</option>
+        <option value='Visa Electron'>Visa Electron</option>
+      </select><br>
+      CardNumber: <input type="number" name="cardNumber" class = "choice"><br>
+      Valid through: <input type="text" name="validThru" class = "choice"><br>
+      CVV: <input type="password" name="CVV" class = "choice"><br>
+      Owner: <input type="text" name="owner" class = "choice"><br>
+      Contact info: <input type="text" name="contactInfo" class = "choice"><br>
+      Contact type: <input type="text" name="contactType" class = "choice"><br>
     </div>
       <button type="submit">Submit</button>
   </form>
