@@ -49,6 +49,7 @@ pipeline {
 			}
 			steps {
 				sshagent(credentials: ['rootkiskacsa_ssh']) {
+					sh 'ssh -o StrictHostKeyChecking=no ubuntu@3.87.38.201 uptime'
 					sh 'ssh ubuntu@3.87.38.201 "bash /home/rootkiskacsa/dockerize_erste.sh"'
 				}
 			}
