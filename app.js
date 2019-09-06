@@ -10,10 +10,10 @@ app.use(express.static('view'));
 app.use(express.json());
 
 const conn = mysql.createConnection({
-  host: 'terraform-20190905185139149400000001.cc4trv09ziot.us-east-1.rds.amazonaws.com',
-  user: 'rootkiskacsa',
-  password: 'vim123okosember1',
-  database: 'erste'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASS,
+  database: DB_NAME
 });
 
 app.listen(PORT, () => console.log('Server is listening on port: ' + PORT));
