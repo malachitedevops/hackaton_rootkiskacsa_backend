@@ -51,7 +51,7 @@ app.get('/ecards/:cardNumber', (req, res) => {
 app.post('/ecards/validate', (req, res) => {
 	getCardDetails(req.body.cardNumber)
 		.then(data => validate(data, req.body))
-		.then(data => res.status(200).json({'result': data}))
+		.then(data => res.status(200).json(data))
 		.catch(err => res.status(500).json(err))
 });
 
