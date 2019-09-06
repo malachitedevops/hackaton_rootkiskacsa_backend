@@ -81,7 +81,7 @@ const send = function() {
       headers: {
         'Content-Type': 'application/json'
       },
-
+      mode: "same-origin",
     })
 			.then(data => console.log(data))
   }else if(h2.innerHTML==='Block Card'){
